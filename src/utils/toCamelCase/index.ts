@@ -1,4 +1,4 @@
-import { TaggedType } from '../../../types'
+import { TaggedType } from '../../types'
 
 type CamelCaseString = TaggedType<string>
 export function toCamelCase(str: string): CamelCaseString {
