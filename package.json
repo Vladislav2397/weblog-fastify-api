@@ -3,6 +3,10 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Vladislav2397/weblog-fastify-api"
+    },
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "cleanup": "rm -rf dist && rm -rf node_modules",
@@ -21,6 +25,7 @@
     },
     "devDependencies": {
         "@types/node": "^20.2.5",
+        "@vercel/node": "^2.14.3",
         "jest": "^29.5.0",
         "ts-jest": "^29.1.0",
         "typescript": "^5.0.4"
