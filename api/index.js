@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
 const env_1 = __importDefault(require("@fastify/env"));
+const client_1 = require("@notionhq/client");
 const toCamelCase_1 = require("./utils/toCamelCase");
 const schema = {
     type: 'object',
@@ -18,26 +19,19 @@ const schema = {
 };
 const options = { schema, dotenv: true };
 let notion;
-// const getEnv = () => {
-//     return process.env as Record<
-//         | 'NOTION_API_SECRET'
-//         | 'NOTION_ARTICLES_DATABASE_ID'
-//         | 'NOTION_USERS_DATABASE_ID'
-//         | 'PORT',
-//         string
-//     >
-// }
+const getEnv = () => {
+    return process.env;
+};
 const server = (0, fastify_1.default)();
 server.register(env_1.default, options).ready(error => {
     if (error) {
         console.error(error);
     }
-    // const { NOTION_API_SECRET, PORT } = getEnv()
-    // if (!NOTION_API_SECRET) {
-    //     throw new Error('Env variables is not defined')
-    // }
-    // notion = new Client({ auth: NOTION_API_SECRET })
-    const PORT = false;
+    const { NOTION_API_SECRET, PORT } = getEnv();
+    if (!NOTION_API_SECRET) {
+        throw new Error('Env variables is not defined');
+    }
+    notion = new client_1.Client({ auth: NOTION_API_SECRET });
     server.listen({ port: PORT ? +PORT : 8000 /* , host: '0.0.0.0' */ }, (err, address) => {
         if (err) {
             console.error(err);
@@ -93,55 +87,50 @@ function getNotionDatabaseEntity(mapNames, response) {
     });
     return items;
 }
-// async function getArticles() {
-//     try {
-//         const { NOTION_ARTICLES_DATABASE_ID } = getEnv()
-//         const response = await notion.databases.query({
-//             database_id: NOTION_ARTICLES_DATABASE_ID,
-//             sorts: [
-//                 {
-//                     direction: 'ascending',
-//                     property: 'ID',
-//                 },
-//             ],
-//         })
-//         return getNotionDatabaseEntity(
-//             {
-//                 Title: 'title',
-//                 Preview: 'preview',
-//                 'Created time': 'createdTime',
-//                 Author: 'authorId',
-//             },
-//             response,
-//         )
-//     } catch (error: any) {
-//         console.error(error.body)
-//     }
-// }
-// async function getUsers() {
-//     const { NOTION_USERS_DATABASE_ID } = getEnv()
-//     const response = await notion.databases.query({
-//         database_id: NOTION_USERS_DATABASE_ID,
-//     })
-//     return getNotionDatabaseEntity(
-//         {
-//             Name: 'name',
-//             Role: 'role',
-//             Email: 'email',
-//             Password: 'password',
-//         },
-//         response,
-//     )
-// }
+async function getArticles() {
+    try {
+        const { NOTION_ARTICLES_DATABASE_ID } = getEnv();
+        const response = await notion.databases.query({
+            database_id: NOTION_ARTICLES_DATABASE_ID,
+            sorts: [
+                {
+                    direction: 'ascending',
+                    property: 'ID',
+                },
+            ],
+        });
+        return getNotionDatabaseEntity({
+            Title: 'title',
+            Preview: 'preview',
+            'Created time': 'createdTime',
+            Author: 'authorId',
+        }, response);
+    }
+    catch (error) {
+        console.error(error.body);
+    }
+}
+async function getUsers() {
+    const { NOTION_USERS_DATABASE_ID } = getEnv();
+    const response = await notion.databases.query({
+        database_id: NOTION_USERS_DATABASE_ID,
+    });
+    return getNotionDatabaseEntity({
+        Name: 'name',
+        Role: 'role',
+        Email: 'email',
+        Password: 'password',
+    }, response);
+}
 server.get('/api/articles', async (request, reply) => {
-    // const articles = await getArticles()
-    // const users = await getUsers()
-    const json = {}; // { articles, users }
+    const articles = await getArticles();
+    const users = await getUsers();
+    const json = { articles, users };
     return reply.code(200).type('application/json').send(json);
 });
 server.get('/api/users', async (request, reply) => {
-    // const users = await getUsers()
-    const json = {}; // { users }
+    const users = await getUsers();
+    const json = { users };
     return reply.code(200).type('application/json').send(json);
 });
 server.get('/api', async (request, reply) => {
