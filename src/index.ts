@@ -244,3 +244,5 @@ server.get('/api/users', async (request, reply) => {
 
     return reply.code(200).type('application/json').send(json)
 })
+
+export default server
