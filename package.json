@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "start": "node dist/index.js",
+        "cleanup": "rm -rf dist && rm -rf node_modules",
+        "start": "tsc && node dist/index",
+        "dev": "nodemon --watch src/**/*.ts --ignore src/**/*.spec.ts --exec node --inspect=0.0.0.0:8000 -r ts-node/register ./src/index.ts",
         "test": "jest"
     },
     "author": "",
@@ -13,7 +15,9 @@
     "dependencies": {
         "@fastify/env": "^4.2.0",
         "@notionhq/client": "^2.2.5",
-        "fastify": "^4.17.0"
+        "fastify": "^4.17.0",
+        "nodemon": "^2.0.22",
+        "ts-node": "^8.10.2"
     },
     "devDependencies": {
         "@types/node": "^20.2.5",

@@ -22,17 +22,13 @@ const options = { schema, dotenv: true }
 let notion: Client
 
 const getEnv = () => {
-    const {
-        NOTION_API_SECRET,
-        NOTION_ARTICLES_DATABASE_ID,
-        NOTION_USERS_DATABASE_ID,
-    } = process.env as Record<string, string>
-
-    return {
-        NOTION_API_SECRET,
-        NOTION_ARTICLES_DATABASE_ID,
-        NOTION_USERS_DATABASE_ID,
-    }
+    return process.env as Record<
+        | 'NOTION_API_SECRET'
+        | 'NOTION_ARTICLES_DATABASE_ID'
+        | 'NOTION_USERS_DATABASE_ID'
+        | 'PORT',
+        string
+    >
 }
 
 const server = fastify()
@@ -41,11 +37,24 @@ server.register(fastifyEnv, options).ready(error => {
     if (error) {
         console.error(error)
     }
-    const { NOTION_API_SECRET } = getEnv()
+    const { NOTION_API_SECRET, PORT } = getEnv()
 
-    console.log('Notion secret isDefined:', Boolean(NOTION_API_SECRET))
+    if (!NOTION_API_SECRET) {
+        throw new Error('Env variables is not defined')
+    }
 
     notion = new Client({ auth: NOTION_API_SECRET })
+
+    server.listen(
+        { port: PORT ? +PORT : 8000, host: '0.0.0.0' },
+        (err, address) => {
+            if (err) {
+                console.error(err)
+                process.exit(1)
+            }
+            console.log(`Server listening at ${address}`)
+        },
+    )
 })
 
 function lowercase(value: string) {
@@ -234,12 +243,4 @@ server.get('/api/users', async (request, reply) => {
     const json = { users }
 
     return reply.code(200).type('application/json').send(json)
-})
-
-server.listen({ port: 8080 }, (err, address) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
-    }
-    console.log(`Server listening at ${address}`)
 })
