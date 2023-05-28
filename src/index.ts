@@ -39,9 +39,9 @@ server.register(fastifyEnv, options).ready(error => {
     }
     const { NOTION_API_SECRET, PORT } = getEnv()
 
-    if (!NOTION_API_SECRET) {
-        throw new Error('Env variables is not defined')
-    }
+    // if (!NOTION_API_SECRET) {
+    //     throw new Error('Env variables is not defined')
+    // }
 
     notion = new Client({ auth: NOTION_API_SECRET })
 
@@ -243,6 +243,12 @@ server.get('/api/users', async (request, reply) => {
     const json = { users }
 
     return reply.code(200).type('application/json').send(json)
+})
+
+server.get('/api', async (request, reply) => {
+    return reply.code(200).type('application/json').send({
+        application: 'worked',
+    })
 })
 
 export default async (req: Request, res: Response) => {
