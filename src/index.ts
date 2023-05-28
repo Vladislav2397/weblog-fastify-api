@@ -46,7 +46,7 @@ server.register(fastifyEnv, options).ready(error => {
     notion = new Client({ auth: NOTION_API_SECRET })
 
     server.listen(
-        { port: PORT ? +PORT : 8000, host: '0.0.0.0' },
+        { port: PORT ? +PORT : 8000 /* , host: '0.0.0.0' */ },
         (err, address) => {
             if (err) {
                 console.error(err)
