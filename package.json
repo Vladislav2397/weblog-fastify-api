@@ -24,6 +24,7 @@
         "ts-node": "^8.10.2"
     },
     "devDependencies": {
+        "@types/jest": "^29.5.1",
         "@types/node": "^20.2.5",
         "@vercel/node": "^2.14.3",
         "jest": "^29.5.0",
