@@ -245,7 +245,7 @@ server.get('/api/users', async (request, reply) => {
     return reply.code(200).type('application/json').send(json)
 })
 
-export default async (req, res) => {
+export default async (req: Request, res: Response) => {
     await server.ready()
     server.server.emit('request', req, res)
 }
