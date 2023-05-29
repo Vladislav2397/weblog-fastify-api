@@ -235,18 +235,24 @@ server.get('/api/articles', async (request, reply) => {
 
     const json = { articles, users }
 
-    return reply.code(200).type('application/json').send(json)
+    return reply
+        .header("Access-Control-Allow-Origin", "*")
+        .code(200).type('application/json').send(json)
 })
 
 server.get('/api/users', async (request, reply) => {
     const users = await getUsers()
     const json = { users }
 
-    return reply.code(200).type('application/json').send(json)
+    return reply
+        .header("Access-Control-Allow-Origin", "*")
+        .code(200).type('application/json').send(json)
 })
 
 server.get('/api', async (request, reply) => {
-    return reply.code(200).type('application/json').send({
+    return reply
+        .header("Access-Control-Allow-Origin", "*")
+        .code(200).type('application/json').send({
         application: 'worked',
     })
 })
