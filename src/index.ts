@@ -237,6 +237,9 @@ server.get('/api/articles', async (request, reply) => {
 
     return reply
         .header("Access-Control-Allow-Origin", "*")
+        .header('Access-Control-Allow-Credentials', true)
+        .header('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+        .header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version')
         .code(200).type('application/json').send(json)
 })
 
@@ -246,12 +249,18 @@ server.get('/api/users', async (request, reply) => {
 
     return reply
         .header("Access-Control-Allow-Origin", "*")
+        .header('Access-Control-Allow-Credentials', true)
+        .header('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+        .header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version')
         .code(200).type('application/json').send(json)
 })
 
 server.get('/api', async (request, reply) => {
     return reply
         .header("Access-Control-Allow-Origin", "*")
+        .header('Access-Control-Allow-Credentials', true)
+        .header('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+        .header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version')
         .code(200).type('application/json').send({
         application: 'worked',
     })
